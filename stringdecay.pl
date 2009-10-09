@@ -16,5 +16,5 @@ my @input  = split //, (delete $args{'-i'} || 'full of sound and fury, signifyin
 
 while ($levels--) {
     print @input, "\n";
-    $input[rand int $#input] = chr int rand 100;
+    $input[rand int $#input] = chr ((int rand 94) + 32);
 } 
