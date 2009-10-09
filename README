@@ -1,0 +1,11 @@
+bitrot
+
+sugar for your software teeth. tools for rotting data (strings, images, videos, databases, binary, ...).
+
+AUTHOR
+nathaniel k smith
+nathanielksmith@gmail.com
+http://chiptheglasses.com
+
+CHANGELOG
+1.0 - add first and only tool, stringdecay.pl
