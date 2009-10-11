@@ -18,7 +18,23 @@ GetOptions ("n=i" => \$levels,
 
 my @input  = split //, $input_str;
 
-while ($levels--) {
+my %seen = ();
+
+# As long as there is more destruction requested, and every character has not been changed...proceed. 
+while ($levels-- and ($#input > scalar keys %seen)) {
     print @input, "\n";
-    $input[rand int $#input] = chr ((int rand 94) + 32);
-} 
+    $input[pick_unseen_num($#input)] = chr ((int rand 94) + 32);
+}
+
+sub pick_unseen_num {
+    my $max = shift;
+    my $guess = int rand $max;
+
+    # If we've already seen this character, try again
+    if ($seen{$guess}++) {
+        return pick_unseen_num($max);
+    }
+    else {
+        return $guess;
+    }
+}
