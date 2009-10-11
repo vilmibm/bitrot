@@ -5,7 +5,8 @@
 # what rot away a string
 # why  I currently use it to make fliers for a radio show.
 
-use Getopt::Long;
+use Getopt::Long;           # In core since 5.0
+use List::Util 'shuffle';   # In core since 5.8
 use warnings;
 use strict;
 
@@ -16,25 +17,11 @@ GetOptions ("n=i" => \$levels,
             "i=s" => \$input_str,
 ) || die "Usage: $0 [[-n levels] [-i input]]\n" ;
 
-my @input  = split //, $input_str;
+my @pos = shuffle(0 .. (length $input_str)-1);
 
-my %seen = ();
-
-# As long as there is more destruction requested, and every character has not been changed...proceed. 
-while ($levels-- and ($#input > scalar keys %seen)) {
-    print @input, "\n";
-    $input[pick_unseen_num($#input)] = chr ((int rand 94) + 32);
+# As long as there is more destruction requested, and every character has not been changed...proceed.
+while ($levels-- and scalar @pos) {
+    print $input_str, "\n";
+    substr($input_str, (pop @pos), 1, chr ((int rand 94) + 32) )
 }
-
-sub pick_unseen_num {
-    my $max = shift;
-    my $guess = int rand $max;
-
-    # If we've already seen this character, try again
-    if ($seen{$guess}++) {
-        return pick_unseen_num($max);
-    }
-    else {
-        return $guess;
-    }
-}
+print $input_str,"\n";
