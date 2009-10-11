@@ -5,14 +5,18 @@
 # what rot away a string
 # why  I currently use it to make fliers for a radio show.
 
+use Getopt::Long;
 use warnings;
 use strict;
 
-die "Usage: $0 [[-n levels] [-i input]]\n" if ($#ARGV+1) % 2 != 0;
+my $levels      = 15;
+my $input_str   = 'full of sound and fury, signifying nothing';
 
-my %args = @ARGV;
-my $levels = delete $args{'-n'} || 15;
-my @input  = split //, (delete $args{'-i'} || 'full of sound and fury, signifying nothing');
+GetOptions ("n=i" => \$levels,
+            "i=s" => \$input_str,
+) || die "Usage: $0 [[-n levels] [-i input]]\n" ;
+
+my @input  = split //, $input_str;
 
 while ($levels--) {
     print @input, "\n";
