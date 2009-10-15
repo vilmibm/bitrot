@@ -12,16 +12,33 @@ use strict;
 
 my $levels      = 15;
 my $input_str   = 'full of sound and fury, signifying nothing';
+my $method      = 'partial';
 
 GetOptions ("n=i" => \$levels,
             "i=s" => \$input_str,
-) || die "Usage: $0 [[-n levels] [-i input]]\n" ;
+            "m=s" => \$method,
+) || die "Usage: $0 [[-n levels] [-i input] [-m method (partial|complete)]\n";
 
-my @pos = shuffle(0 .. (length $input_str)-1);
+my $methods = {
+    partial => sub {
+        my @input  = split //, $input_str;
+        
+        while ($levels--) {
+            print @input, "\n";
+            $input[rand int $#input] = chr ((int rand 94) + 32);
+        } 
+    },
+    complete => sub {
+        my @pos = shuffle(0 .. (length $input_str)-1);
+        
+        # As long as there is more destruction requested, and every character has not been changed...proceed.
+        while ($levels-- and scalar @pos) {
+            print $input_str, "\n";
+            substr($input_str, (pop @pos), 1, chr ((int rand 94) + 32) )
+        }
+        print $input_str,"\n";
+    }
+};
 
-# As long as there is more destruction requested, and every character has not been changed...proceed.
-while ($levels-- and scalar @pos) {
-    print $input_str, "\n";
-    substr($input_str, (pop @pos), 1, chr ((int rand 94) + 32) )
-}
-print $input_str,"\n";
+$methods->{$method}->();
+
